@@ -260,7 +260,7 @@ class Guard implements GuardContract
     /**
      * @return Token|null
      */
-    protected function detectedToken()
+    public function detectedToken()
     {
         // retrieve the token from the Authorization header.
         $headerToken = $this->getTokenFromHeader();
