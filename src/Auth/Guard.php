@@ -3,6 +3,7 @@
 namespace Codecasts\Auth\JWT\Auth;
 
 use Codecasts\Auth\JWT\Events\EmployeeLoginEvent;
+use Codecasts\Auth\JWT\Events\EmployeeLogoutEvent;
 use Illuminate\Auth\Events\Attempting;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
@@ -150,6 +151,20 @@ class Guard implements GuardContract
     {
         if (isset($this->events)) {
             $this->events->dispatch(new EmployeeLoginEvent($user, $storeId));
+        }
+    }
+
+    /**
+     * Fire the logout event if the dispatcher is set.
+     *
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     *
+     * @return void
+     */
+    protected function fireLogoutEvent($user)
+    {
+        if (isset($this->events)) {
+            $this->events->dispatch(new EmployeeLogoutEvent($user));
         }
     }
 
@@ -357,7 +372,7 @@ class Guard implements GuardContract
         $user = $this->user();
 
         // blacklist the user token.
-
+        $this->fireLogoutEvent($user);
         $this->loggedOut = true;
     }
 
