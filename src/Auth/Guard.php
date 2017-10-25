@@ -106,6 +106,7 @@ class Guard implements GuardContract
         $this->name = $name;
         $this->provider = $provider;
         $this->manager = $manager;
+        $this->setDispatcher($this->app['events']);
     }
 
     /**
