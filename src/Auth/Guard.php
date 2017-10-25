@@ -2,6 +2,7 @@
 
 namespace Codecasts\Auth\JWT\Auth;
 
+use Codecasts\Auth\JWT\Events\EmployeeLoginEvent;
 use Illuminate\Auth\Events\Attempting;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Login;
@@ -148,9 +149,8 @@ class Guard implements GuardContract
     protected function fireLoginEvent($user)
     {
         if (isset($this->events)) {
-            $token = $this->detectedToken();
-            $user->currentToken = $token;
-            $this->events->dispatch(new Login($user, false));
+            $storeId = $this->detectedToken()->getClaim('store');
+            $this->events->dispatch(new EmployeeLoginEvent($user, $storeId));
         }
     }
 
