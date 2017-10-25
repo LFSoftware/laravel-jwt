@@ -27,6 +27,6 @@ class EmployeeLoginEvent
     public function __construct(User $user, $store)
     {
         $this->user = $user;
-        $this->store = $store;
+        $this->storeId = $store;
     }
 }
