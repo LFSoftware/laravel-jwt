@@ -148,6 +148,8 @@ class Guard implements GuardContract
     protected function fireLoginEvent($user)
     {
         if (isset($this->events)) {
+            $token = $this->detectedToken();
+            $user->currentToken = $token;
             $this->events->dispatch(new Login($user, false));
         }
     }
