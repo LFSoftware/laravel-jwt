@@ -146,10 +146,9 @@ class Guard implements GuardContract
      *
      * @return void
      */
-    protected function fireLoginEvent($user)
+    protected function fireLoginEvent($user, $storeId)
     {
         if (isset($this->events)) {
-            $storeId = $this->detectedToken()->getClaim('store');
             $this->events->dispatch(new EmployeeLoginEvent($user, $storeId));
         }
     }
@@ -216,10 +215,6 @@ class Guard implements GuardContract
      */
     public function login(Authenticatable $user)
     {
-        // If we have an event dispatcher instance set we will fire an event so that
-        // any listeners will hook into the authentication events and run actions
-        // based on the login and logout events fired from the guard instances.
-        $this->fireLoginEvent($user);
 
         $this->setUser($user);
     }
@@ -379,10 +374,10 @@ class Guard implements GuardContract
     /**
      * Issue a token for the current authenticated user.
      *
-     * @param array $customClaims
+     * @param int $storeId
      * @return bool|string
      */
-    public function issue(array $customClaims = [])
+    public function issue($storeId)
     {
         // ensure there is a user logged in.
         if (!$this->user) {
@@ -391,7 +386,8 @@ class Guard implements GuardContract
 
         // try to issue a new token and return.
         try {
-            return $this->manager()->issue($this->user, $customClaims);
+            $this->fireLoginEvent($this->user, $storeId);
+            return $this->manager()->issue($this->user, ["store" => $storeId]);
         } catch (\Exception $e) {
             // catch any exceptions that the token issuing may trigger.
             return false;

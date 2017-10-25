@@ -68,10 +68,10 @@ interface Guard extends LaravelGuard
     /**
      * Issue a token for the current authenticated user.
      *
-     * @param array $customClaims
+     * @param int $storeId
      * @return bool|string
      */
-    public function issue(array $customClaims = []);
+    public function issue($storeId);
 
     /**
      * Get the event dispatcher instance.
