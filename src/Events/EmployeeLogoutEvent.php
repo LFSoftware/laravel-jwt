@@ -15,14 +15,16 @@ class EmployeeLogoutEvent
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+    public $storeId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($user, $storeId)
     {
         $this->user = $user;
+        $this->storeId = $storeId;
     }
 }

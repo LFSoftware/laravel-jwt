@@ -161,10 +161,10 @@ class Guard implements GuardContract
      *
      * @return void
      */
-    protected function fireLogoutEvent($user)
+    protected function fireLogoutEvent($user, $storeId)
     {
         if (isset($this->events)) {
-            $this->events->dispatch(new EmployeeLogoutEvent($user));
+            $this->events->dispatch(new EmployeeLogoutEvent($user, $storeId));
         }
     }
 
@@ -230,7 +230,6 @@ class Guard implements GuardContract
      */
     public function login(Authenticatable $user)
     {
-
         $this->setUser($user);
     }
 
@@ -370,9 +369,9 @@ class Guard implements GuardContract
     public function logout()
     {
         $user = $this->user();
-
+        $token = $this->detectedToken();
         // blacklist the user token.
-        $this->fireLogoutEvent($user);
+        $this->fireLogoutEvent($user, $token->getClaim('store'));
         $this->loggedOut = true;
     }
 
